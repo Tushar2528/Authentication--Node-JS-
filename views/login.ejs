@@ -1,3 +1,5 @@
+
+
 <%- include('partials/header') %>
 
 <div class="container mt-5">
@@ -17,26 +19,57 @@
             <div class="form-group">
               <label for="password">Password</label>
               <input type="password" class="form-control" name="password">
+
+              <% if (typeof error !== 'undefined') { %>
+                <p class="error"><span class="error-icon">&#10060;</span><%= error %></p>
+              <% } %>
             </div>
             <button type="submit" class="btn btn-dark">Login</button>
+            
           </form>
 
         </div>
       </div>
     </div>
 
-    <!-- <div class="col-sm-4">
-      <div class="card">
-        <div class="card-body">
-          <a class="btn btn-block" href="/auth/google" role="button">
-            <i class="fab fa-google"></i>
+    <div class="col-sm-4">
+      <div style="border: 0px;" class="card">
+        <div  class="card-body">
+          <a style="padding: 20px; border-radius: 10px; text-align: center; border: 0px;" class="btn btn-block btn-social btn-google" href="/auth/google" role="button">
+            <i style="padding: 15px; text-align: center; border: 0px;" class="fab fa-google"></i>
             Sign In with Google
           </a>
         </div>
       </div>
-    </div> -->
+    </div>
 
   </div>
+
+
 </div>
+
+
+<script>
+  <% if (flash.success && flash.success.length >0) {%>
+    new Noty({
+      theme : 'relax',
+      text : "<%= flash.success%>",
+      type : 'success',
+      layout : 'topRight',
+      timeout : 1500
+    }).show();
+  <% } %>
+
+
+  <% if (flash.error && flash.error.length >0) {%>
+    new Noty({
+      theme : 'relax',
+      text : "<%= flash.error%>",
+      type : 'error',
+      layout : 'topRight',
+      timeout : 1500
+    }).show();
+  <% } %>
+</script>
 
 <%- include('partials/footer') %>

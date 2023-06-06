@@ -1,0 +1,69 @@
+<%- include('partials/header') %>
+<div class="container mt-5">
+  <h1>Reset Password</h1>
+
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Makes POST request to /reset route -->
+          <form action="/reset" method="POST">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" class="form-control" name="username">
+            </div>
+            <div class="form-group">
+              <label for="currentPassword">Current Password</label>
+              <input type="password" class="form-control" name="currentPassword">
+
+              <% if (typeof error !== 'undefined' && error === 'Incorrect current password') { %>
+                <p class="error"><span class="error-icon">&#10060;</span>Incorrect Current Password</p>
+              <% } %>
+
+              <label for="newPassword">New Password</label>
+              <input type="password" class="form-control" name="newPassword">
+
+              <label for="confirmNewPassword">Confirm New Password</label>
+              <input type="password" class="form-control" name="confirmNewPassword">
+
+              <% if (typeof error !== 'undefined' && error === 'New passwords do not match') { %>
+                <p class="error"><span class="error-icon">&#10060;</span>New Passwords Do not Match</p>
+              <% } %>
+
+              <% if (typeof success !== 'undefined') { %>
+                <p class="success"><%= success %></p>
+              <% } %>
+            </div>
+            <button type="submit" class="btn btn-dark">Reset Password</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    <% if (flash.success && flash.success.length >0) {%>
+      new Noty({
+        theme : 'relax',
+        text : "<%= flash.success%>",
+        type : 'success',
+        layout : 'topRight',
+        timeout : 1500
+      }).show();
+    <% } %>
+  
+  
+    <% if (flash.error && flash.error.length >0) {%>
+      new Noty({
+        theme : 'relax',
+        text : "<%= flash.error%>",
+        type : 'error',
+        layout : 'topRight',
+        timeout : 1500
+      }).show();
+    <% } %>
+  </script>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,90 +1,76 @@
 
+//Require all the necessary packages installed using npm.
+//Require all the exported filed from different subfolders
+
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
-const encrypt = require('mongoose-encryption');
+const path = require('path');
+const session = require('express-session');
+const passport = require('passport');
+const passportLocalMongoose = require('passport-local-mongoose');
+const passportGoogle = require('./config/passport-google-oauth-strategy');
+const flash = require('connect-flash');
+const customMVare = require('./config/middleware');
+const passportLocal = require('./config/passport-local-strategy');
 
 const db = require('./config/mongoose');
 const User = require('./models/user_schema');
 
-
-console.log(process.env.SECRET);
-
 const app = express();
 
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({
-    extended : true
+app.set('views', path.join(__dirname, 'views'));
 
+app.use(bodyParser.urlencoded({
+  extended: true
 }));
 
-// ******************************************************Router Part*******************************
-// app.get('/', require('./routes'));
-app.get("/", function(req,res){
-    res.render("home");
-});
+app.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: false,
+  saveUninitialized: false,
+  resave : false,
+  cookie : {
+    maxAge : (1000 *60 *100)
+  }
+}));
 
-app.get("/login", function(req,res){
-    res.render("login");
-});
-
-app.get("/register", function(req,res){
-    res.render("register");
-});
+app.use(passport.initialize());
+app.use(passport.session());
+// app.use(passport.setAuthenticatedUser());
+app.use(flash());
+app.use(customMVare.setFlash);
 
 
-// **********************************************************
 
-app.post('/register', function(req, res){
-    const newUser = new User({
-        email: req.body.username,
-        password: req.body.password,
-        confirmPassword: req.body.confirmPassword
-    });
-    console.log(req.body);
-    console.log(newUser.email);
-    console.log(newUser.password);
-    console.log(newUser.confirmPassword);
-    if (newUser.password !== newUser.confirmPassword) {
-        // Password and confirmPassword do not match
-        res.render('register', { error: 'Passwords do not match' });
-    } else {
-        newUser.save()
-            .then(function() {
-                res.render('secrets');
-            })
-            .catch(function(err) {
-                console.log(err);
-                res.render('register', { error: 'Error occurred while saving user' });
-            });
-    }
+// Passport Configuration
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+// Passport Google OAuth Strategy
+passportGoogle(passport);
+
+// Router
+app.use('/', require('./routes'));
+
+
+//Providing the port to the app to be available on the web
+app.listen(8000, function () {
+  console.log("Server started on port: 8000");
 });
 
 
-// *****************************************************
-
-app.post('/login', function(req,res){
-    const username  = req.body.username;
-    const password = req.body.password;
-
-    User.findOne({email : username})
-    .then(function(user){
-        if (user){
-            if (user.password === password){
-                res.render('secrets');
-            }
-        }
-    })
-    .catch(function(err){
-        console.log(err);
-    });
-});
-
-// ****************************************************************************Router part end**************************************************
 
 
-app.listen(8000, function(){
-    console.log("Server started on port : 8000");
-})
+
+
+
+
+
+
+
+

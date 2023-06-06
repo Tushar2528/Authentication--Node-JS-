@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="../public/css/errorStyle.css">
 <%- include('partials/header') %>
 <div class="container mt-5">
   <h1>Register</h1>
@@ -12,15 +13,17 @@
             <div class="form-group">
               <label for="email">Email</label>
               <input type="email" class="form-control" name="username">
+              <% if (typeof error !== 'undefined' && error.field === 'username') { %>
+                <p class="error"><span class="error-icon">&#10060;</span><%= error.message %></p>
+              <% } %>
             </div>
             <div class="form-group">
               <label for="password">Password</label>
               <input type="password" class="form-control" name="password">
               <label for="confirmPassword">Confirm Password</label>
               <input type="password" class="form-control" name="confirmPassword">
-              
-              <% if (typeof error !== 'undefined') { %>
-                <p class="error"><%= error %></p>
+              <% if (typeof error !== 'undefined' && error.field === 'confirmPassword') { %>
+                <p class="error"><span class="error-icon">&#10060;</span><%= error.message %></p>
               <% } %>
             </div>
             <button type="submit" class="btn btn-dark">Register</button>
@@ -30,17 +33,16 @@
       </div>
     </div>
 
-    <!-- <div class="col-sm-4">
-      <div class="card social-block">
+    <div class="col-sm-4">
+      <div style="border: 0px;" class="card">
         <div class="card-body">
-          <a class="btn btn-block" href="/auth/google" role="button">
-            <i class="fab fa-google"></i>
-            Sign Up with Google
+          <a style="padding: 20px; border-radius: 10px; text-align: center; border: 0px;" class="btn btn-block btn-social btn-google" href="/auth/google" role="button">
+            <i style="padding: 15px; text-align: center; border: 0px;" class="fab fa-google"></i>
+            Sign In with Google
           </a>
         </div>
       </div>
-    </div> -->
-
+    </div>
   </div>
 </div>
 
