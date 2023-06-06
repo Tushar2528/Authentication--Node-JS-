@@ -1,7 +1,7 @@
 // **************************Database part with mongoose********************************
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://127.0.0.1:27017/userDB', {useNewUrlParser : true});
+mongoose.connect(process.env.MONGODB_URL );
 
 
 
